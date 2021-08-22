@@ -1,5 +1,4 @@
 #include<stdio.h>
-
 int suma(int cislo){
     int sum = 0;
     while (cislo>0){
