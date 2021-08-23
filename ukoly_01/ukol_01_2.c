@@ -16,3 +16,4 @@ void main()
     printf("suma je: %d\n", suma(x));
 }
 
+
