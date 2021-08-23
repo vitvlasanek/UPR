@@ -1,3 +1,7 @@
+//Úkol č.1
+//Načtěte celá čísla do pole a vytvořte funkci, která vrátí součet čísel v poli
+//● Počet čísel zadejte předem pomocí proměnné int soucet_pole(int *pole, int pocet)
+
 #include <stdio.h>
 
 int soucet_pole(int (*pole)[5], int pocet)
