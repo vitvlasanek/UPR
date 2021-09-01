@@ -16,24 +16,25 @@ int najdi(char znak, char *pole, int velikost){
 }
 
 void printLowerCharacters(char *str, int velikost){
-    for (int i = 0; i < (velikost-1); i++){
-        char newLower;
+    char newLower;
+    for (int i = 0; i < (velikost); i++){
         newLower = tolower(str[i]);
         printf ("%c ", newLower);
     }
 }
 
 int main(){
-    char* arr = (char*) malloc(sizeof(char)*10);
+    char* arr = (char*) malloc(sizeof(char)*11);
     if (!arr){
         printf("Dosla pamet!\n");
         return -1;
     }
-    int n = 10;
-    arr = "Oscilator";
+    int n = 11;
+    arr = "Oscilator\n";
     char pismeno;
-    printf("zadej hledany znak: ");
-    scanf("%c", &pismeno);
+    //printf("zadej hledany znak: ");
+    //scanf("%c", &pismeno);
+    pismeno = '\n';
     int pozice = najdi(pismeno, arr, n);
     printf("Znak %c se nachazi na %d. pozici ve slove %s\n", pismeno, pozice, arr);
     printLowerCharacters(arr, n);
