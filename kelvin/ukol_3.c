@@ -51,7 +51,8 @@ float * softmax( const float * vstupni_vektor, const int len ){
         printf(" %.4f", nove_pole[i]);
     }
     free(nove_pole);
-    return 0;
+    return nove_pole;
+    
 }
 
 int main() {
@@ -67,13 +68,18 @@ int main() {
 
     for (int i = 0; i < pocet_radku; i++)
     {
+        printf("\n\nvstup:\n");
         for (int i = 0; i < len; i++)
         {
             scanf("%f", &vstupni_vektor[i]);
         }
-        
+        printf("\n\nvýstup:");
         softmax(vstupni_vektor,len);
+        // for (int i = 0; i < len; i++){
+        //     printf(" %.4f\n", softmax(vstupni_vektor,len)[i]);
+        // }
     }
+
     printf("\n");
     free(vstupni_vektor);
     return 0;
