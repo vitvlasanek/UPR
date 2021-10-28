@@ -78,13 +78,13 @@ int main() {
 	for (int i = 0; i < len; i++){
             printf(" %.4f", result[i]);
 	}
+	free(result);
         // for (int i = 0; i < len; i++){
         //     printf(" %.4f\n", softmax(vstupni_vektor,len)[i]);
         // }
     }
 
     printf("\n");
-    free(result);
     free(vstupni_vektor);
     return 0;
 }
