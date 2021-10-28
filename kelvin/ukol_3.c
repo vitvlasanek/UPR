@@ -46,11 +46,10 @@ float * softmax( const float * vstupni_vektor, const int len ){
         nove_pole[i] = exp(vstupni_vektor[i]) / suma_pole(vstupni_vektor, len);
     }
 
-    printf("\n%d", argmax(nove_pole, len));
-    for (int i = 0; i < len; i++){
-        printf(" %.4f", nove_pole[i]);
-    }
-    free(nove_pole);
+    //printf("\n%d", argmax(nove_pole, len));
+    //for (int i = 0; i < len; i++){
+    //    printf(" %.4f", nove_pole[i]);
+    //}
     return nove_pole;
     
 }
@@ -74,13 +73,18 @@ int main() {
             scanf("%f", &vstupni_vektor[i]);
         }
         printf("\n\nvýstup:");
-        softmax(vstupni_vektor,len);
+        float * result = softmax(vstupni_vektor,len);
+	printf("\n%d", argmax(result, len));
+	for (int i = 0; i < len; i++){
+            printf(" %.4f", result[i]);
+	}
         // for (int i = 0; i < len; i++){
         //     printf(" %.4f\n", softmax(vstupni_vektor,len)[i]);
         // }
     }
 
     printf("\n");
+    free(result);
     free(vstupni_vektor);
     return 0;
 }
