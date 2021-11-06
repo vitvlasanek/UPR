@@ -20,10 +20,12 @@ float circle_circumference(const struct Circle * self){
 
 int main(){
     struct Circle self;
+    struct Point2 coordinates;
+    self.center = &coordinates;
     scanf("%f",&self.center->x);
     scanf("%f",&self.center->y);
     scanf("%f",&self.radius);  
     printf("%.2f",circle_circumference(&self));
-    printf("\n%f %f",self.center->x,self.center->y);
+    //printf("\n%f %f",self.center->x,self.center->y);
     return 0;
 }
