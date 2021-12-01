@@ -1,52 +1,35 @@
-//VLA0095
+#include "vla0095_circle_2.h"
 
-#include <stdio.h>
-#include <math.h>
-
-struct Point2
-{
-    float x;
-    float y;
-};
-
-typedef struct Circle_
-{
-    struct Point2 * center;
-    float radius;
-}Circle;
-
-
-Circle * array_cerate_new (const int i) {
+Circle * circle_new(){
     Circle * arr = NULL;
-    arr = (Circle *)malloc( sizeof(Circle) );
-
-    arr->center[i] = (float *)malloc( 2 * sizeof( float ) );
-    arr->radius[i] = 0;
-
-    return arr;
-}
-    
+    arr = (Circle *) malloc (sizeof(Circle));
+    arr->center = (Center *) malloc (sizeof(Center));
 }
 
-int main(){
-    Circle kruh[1];
-    struct Point2 coordinates[1];
-    for (int i = 0; i < 2; i++)
-    {
-        Array * a = array_create_new (i);
-        kruh[i].center = &coordinates[i];
-        scanf("%f",&kruh[i].center->x);
-        scanf("%f",&kruh[i].center->y);
-        scanf("%f",&kruh[i].radius);   
-    }
-    
+void circle_free(Circle ** self){
+    free ((*self)->center);
+    (*self)->center = NULL;
+    free(*self);
+    *self = NULL;
+}
 
-    //printf("%.2f",circle_circumference(&self));
-    for (int i = 0; i < 2; i++)
-    {
-        printf("\n%f %f",kruh[i].center->x,kruh[i].center->y);
+void circle_set(Circle * self, float x, float y, float rad){
+    self->radius = rad;
+    self->center->x = x;
+    self->center->y = y;
+}
 
+bool circle_contains_circle(const Circle * self, const Circle * other){
+    float x_dist = (self->center->x)-(other->center->x);
+    float y_dist = (self->center->y)-(other->center->y);
+    float dist = sqrt((pow(x_dist,2))+(pow(y_dist,2)));
+    float radius_diff = abs((self->radius)-(other->radius));
+    if (dist < radius_diff){
+        return false;
     }
-    
-    return 0;
+    else
+    {
+        return true;
+    }
+       
 }
