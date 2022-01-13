@@ -7,7 +7,7 @@ int main()
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Window* window = SDL_CreateWindow("SDL experiments", 100, 100, GAME_WIDTH, GAME_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Tetris UPR", 100, 100, GAME_WIDTH * 2, GAME_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -22,15 +22,11 @@ int main()
         return 1;
     }
   
-    Grid grid;
-    create_grid (&grid, 20, 10);
+    Grid grid;                                              //struct s parametry herní mřížky
+    create_grid (&grid, GRID_HEIGHT, GRID_WIDTH);           //vytvoření mřížky
+    printf("cislo je %d\n", grid.cell[2]);
     int pivot;
     
-    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	// SDL_RenderClear(renderer);
-    // generate_grid(&grid, renderer, 30);                         //vykreslení mřížky (mydefs.c)
-    // SDL_RenderPresent(renderer);
-
     SDL_Event event;
     bool quit = false;
 
@@ -42,15 +38,38 @@ int main()
             {
                 quit = true;
             }
-        }
+            else if (event.type == SDLK_DOWN){
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        generate_grid(&grid, renderer, 30);                     //generováíní mřížky (mydefs.c)
-        SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);      // Nastavení barvy na mřížky
-        for (int i = 0; i < 10; i++){
-            SDL_RenderDrawLine(renderer, i * (GAME_WIDTH / 10), 0, i * (GAME_WIDTH / 10), 600); // Vykreslení čar mřížky
+            }
+            else if (event.type == SDLK_UP){
+
+            }
+            else if (event.type == SDLK_RIGHT){
+
+            }
+            else if (event.type == SDLK_LEFT){
+
+            }
+
         }
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);    // Nastavení barvy na červenou
+        for (int i = 1; i < GRID_WIDTH + 1; i++){
+            SDL_RenderDrawLine(renderer, i * (GAME_WIDTH / GRID_WIDTH), 0, i * (GAME_WIDTH / GRID_WIDTH), 600); // Vykreslení čar mřížky
+        }
+        for (int i = 1; i < GRID_HEIGHT; i++){
+            SDL_RenderDrawLine(renderer, 0, i * (GAME_HEIGHT / GRID_HEIGHT), 300, i * (GAME_HEIGHT / GRID_HEIGHT)); // Vykreslení čar mřížky
+        }
+        
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_Rect right;
+        right.x = GAME_WIDTH;
+        right.y = 0;
+        right.w = GAME_WIDTH;
+        right.h = GAME_HEIGHT;
+        SDL_RenderFillRect(renderer, &right);
+
+        generate_grid(&grid, renderer, GAME_HEIGHT / GRID_HEIGHT);                   //generováíní mřížky (mydefs.c)
         SDL_RenderPresent(renderer);  // Prezentace kreslítka
     }
     // SDL_DestroyRenderer(renderer);
