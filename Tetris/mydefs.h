@@ -43,12 +43,16 @@ typedef struct Colours_ {
 }Colours;
 
 void create_grid(Grid *grid, int height, int width);
-void fill_cells(Grid* grid, SDL_Renderer* renderer, int size, Colours* colours, Tetromino_active* tetromino_active);
+void fill_cells(Grid* grid, SDL_Renderer* renderer, int size, Colours* colours, Tetromino_active* tetromino_active, Tetromino_type* typer);
 void fill_right(SDL_Renderer* renderer);
-void move_right (Tetromino_active* tetromino);
-void move_left (Tetromino_active* tetromino);
+void move_right (Tetromino_active* tetromino, Grid* grid);
+void move_left (Tetromino_active* tetromino, Grid* grid);
+void move_down (Tetromino_active* tetromino, Grid* grid);
+
 void load_tetrominos(Tetromino_type* type, char i);
-void rotate_tetromino (Tetromino_active* tetromino);
+unsigned char rotate_indexcalc (Tetromino_active* tetromino, int x, int y);
+void rotate_tetromino (Tetromino_active* tetromino, Grid* grid);
+
 
 
 int pre_launch(SDL_Window* window, SDL_Renderer* renderer);

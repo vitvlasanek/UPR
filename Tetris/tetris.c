@@ -54,11 +54,6 @@ int main()
     char rand_type = rand() % 7;
     copy_random(&tetromino_active, &type[rand_type], rand_type);
 
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%d", tetromino_active.real_data[i]);
-    }
-    printf("\n");
 
     // for (int i = 0; i < tetromino_active.side * tetromino_active.side; i++)
     // {
@@ -69,6 +64,11 @@ int main()
     SDL_Event event;
     while (!quit)
     {
+    for (int i = 0; i < 9; i++)
+    {
+        //printf("%d", tetromino_active.real_data[i]);
+    }
+    //printf("\n");
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -77,17 +77,21 @@ int main()
             }
             if (event.type == SDL_KEYDOWN) {
 
-                if (event.type == SDLK_DOWN){
+                if (event.key.keysym.sym == SDLK_DOWN){
+                    move_down(&tetromino_active, &grid);
 
                 }
                 else if (event.key.keysym.sym == SDLK_UP){
-                    rotate_tetromino(&tetromino_active);
+                    //printf("%d -> ", tetromino_active.rot);
+                    rotate_tetromino(&tetromino_active, &grid);
+                    //printf("%d\n", tetromino_active.rot);
+
                 }
                 else if (event.key.keysym.sym == SDLK_RIGHT){
-                    move_right(&tetromino_active);
+                    move_right(&tetromino_active, &grid);
                 }
                 else if (event.key.keysym.sym == SDLK_LEFT){
-                    move_left(&tetromino_active);
+                    move_left(&tetromino_active, &grid);
                 }
                 else if (event.key.keysym.sym == SDLK_ESCAPE){
                     quit = true;
@@ -108,11 +112,10 @@ int main()
         
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-        fill_cells(&grid, renderer, GAME_HEIGHT / GRID_HEIGHT, colours, &tetromino_active);                   //generováíní mřížky (mydefs.c)
+        fill_cells(&grid, renderer, GAME_HEIGHT / GRID_HEIGHT, colours, &tetromino_active, &type[rand_type]);                   //generováíní mřížky (mydefs.c)
 
         fill_right(renderer);
         SDL_RenderPresent(renderer);  // Prezentace kreslítka
-        printf("%d", tetromino_active.rot);
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

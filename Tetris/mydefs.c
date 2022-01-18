@@ -9,22 +9,29 @@ void create_grid(Grid *grid, int y_cnt_a, int x_cnt) {
 }
 
 
-void fill_cells(Grid* grid, SDL_Renderer* renderer, int cell_size, Colours* colours, Tetromino_active* tetromino_active){
+void fill_cells(Grid* grid, SDL_Renderer* renderer, int cell_size, Colours* colours, Tetromino_active* tetromino_active, Tetromino_type* type){
     
     int cells_cnt = grid->y_cnt * grid->x_cnt;
     //char* new_cells = (char*) malloc (sizeof(char)* cells_cnt);
     char new_cells[cells_cnt];
     memcpy(new_cells, grid->cell, cells_cnt);
 
-    tetromino_active->y = 2;
+    // tetromino_active->y = 5;
 
     for (int y = 0; y < tetromino_active->side; y++){
         for (int x = 0; x < tetromino_active->side; x++){
             
             int index = (tetromino_active->y + y) * grid->x_cnt + (tetromino_active->x + x);
-            new_cells[index] = tetromino_active->real_data[y * tetromino_active->side + x];
+            new_cells[index] = new_cells[index] + tetromino_active->real_data[y * tetromino_active->side + x];
         }
     }
+
+    // for (int y = 0; y < tetromino_active->side; y++){
+    //     for (int x = 0; x < tetromino_active->side; x++){           
+    //         int index = (tetromino_active->y + y) * grid->x_cnt + (tetromino_active->x + x);
+    //         new_cells[index] = rotate_tetromino(type, tetromino_active->rot, x ,y);
+    //     }
+    // }
 
 
     for (int y = 0; y < (grid->y_cnt + 2); y++){
