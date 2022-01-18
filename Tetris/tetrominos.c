@@ -2,37 +2,44 @@
 
 void copy_random(Tetromino_active* tetromino, Tetromino_type* type, char rand_num){
     tetromino->side = type->side;
-
-    // for (int i; i < (type->side * type->side); i++){
-    //     tetromino->real_data[i] = type->tetromino[i];
-    // }
     //tetromino->real_data = (unsigned char*) malloc (sizeof(char) * tetromino->side);
     tetromino->real_data = type->tetromino;
-    tetromino->pattern = type->tetromino;
     tetromino->id = rand_num;
     tetromino->rot = 0;
     tetromino->x = rand() % (GRID_WIDTH - type->side);
-    tetromino->y = 2;    
+    tetromino->ghost = tetromino->x;
+    tetromino->y = 0;
+    tetromino->status = true;    
 }
 
-
 void rotate_tetromino (Tetromino_active* tetromino, Grid* grid){
-    int tetromino_size = tetromino->side * tetromino->side;                                     //velikost pole (strana^2)
-    unsigned char tetromino_rotated[tetromino_size];                                            //nové pole s rotovaným tetrominem
+    int tetromino_size = tetromino->side * tetromino->side;                                             //velikost pole (strana^2)
+    unsigned char tetromino_rotated[tetromino_size];                                                    //nové pole s rotovaným tetrominem
 
+    int bounce = 0;                                                                                     //odraz od zdi (o kolik)
+    if(tetromino->x < 0){
+        bounce = - tetromino->x;
+    }
+    else if(tetromino->x > (GRID_WIDTH - tetromino->side - 1)){
+        bounce = GRID_WIDTH - tetromino->x  - tetromino->side;
+    }
+    else{
+        bounce = 0;
+    }
+    
     for (int y = 0; y < tetromino->side; y++){
         for (int x = 0; x < tetromino->side; x++){
 
-            char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->y) * GRID_WIDTH];     //index v poli odpovídající poloze tetromina
+            char gr_val = grid->cell[(x + tetromino->x + bounce) + (y + tetromino->y) * GRID_WIDTH];     //index v poli odpovídající poloze tetromina
             int index = tetromino->side * y + x;   
             tetromino_rotated[index] = rotate_indexcalc(tetromino ,x ,y);
 
-            if (tetromino_rotated[index] != 0 && gr_val != 0) {                                 //konrola 
+            if (tetromino_rotated[index] != 0 && gr_val != 0) {                                          //konrola 
                 return;
             }     
         }
     }
-
+    tetromino->x = tetromino->x + bounce;
     memcpy(tetromino->real_data, tetromino_rotated, tetromino_size);
 }
 
@@ -60,12 +67,13 @@ unsigned char rotate_indexcalc (Tetromino_active* tetromino, int x, int y){
 }
 
 void move_right (Tetromino_active* tetromino, Grid* grid){
-    if (tetromino->x == (GRID_WIDTH - tetromino->side)){
-        return;
-    }
 
-    else{
-        for (int y = 0; y < tetromino->side; y++){
+    for (int y = 0; y < tetromino->side; y++){
+        int index = y * tetromino->side  + GRID_WIDTH - tetromino->x - 1;
+        if (tetromino->real_data[index] != 0 && tetromino->x > (GRID_WIDTH - tetromino->side - 1)){
+            return;
+        }
+        else{
             for (int x = 0; x < tetromino->side; x++){
                 char t_val = tetromino->real_data[(y * tetromino->side + x)];
                 char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->y) * GRID_WIDTH + 1];
@@ -74,17 +82,17 @@ void move_right (Tetromino_active* tetromino, Grid* grid){
                 }
             }
         }
-        tetromino->x++; 
     }
+    tetromino->x++; 
 }
 
 void move_left (Tetromino_active* tetromino, Grid* grid){
-    if (tetromino->x == 0){
-        return;
-    }
-    else
-    {
-        for (int y = 0; y < tetromino->side; y++){
+    for (int y = 0; y < tetromino->side; y++){
+        int index = y * tetromino->side - tetromino->x;
+        if (tetromino->real_data[index] != 0 && tetromino->x <= 0){
+            return;
+        }
+        else{
             for (int x = 0; x < tetromino->side; x++){
                 char t_val = tetromino->real_data[(y * tetromino->side + x)];
                 char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->y) * GRID_WIDTH - 1];
@@ -93,32 +101,69 @@ void move_left (Tetromino_active* tetromino, Grid* grid){
                 }
             }
         }
-        tetromino->x--;  
-    }
+    } 
+    tetromino->x--;  
 }
 
 void move_down (Tetromino_active* tetromino, Grid* grid){
-    if (tetromino->y == GRID_HEIGHT + 2 - tetromino->side){
-        return;
-    }
-    else
-    {
-        for (int y = 0; y < tetromino->side; y++){
-            for (int x = 0; x < tetromino->side; x++){
-                char t_val = tetromino->real_data[(y * tetromino->side + x)];
-                char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->y + 1) * GRID_WIDTH];
-                if (t_val != 0 && gr_val != 0){
-                    return;
-                }
+    for (int x = 0; x < tetromino->side; x++){
+        char index= ((GRID_HEIGHT - tetromino->y + 1) * tetromino->side + x);
+        if (tetromino->y >= (GRID_HEIGHT - tetromino->side + 2) && tetromino->real_data[index] != 0){           //kontrola spodní pozice
+            
+            tetromino_place(tetromino, grid);
+            return;
+        }
+        else{
+            for (int y = 0; y < tetromino->side; y++){                                                              //kontrola překážek
+                    char t_val = tetromino->real_data[(y * tetromino->side + x)];
+                    char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->y + 1) * GRID_WIDTH];
+                    if (t_val != 0 && gr_val != 0){
+                        tetromino_place(tetromino, grid);
+                        return;
+                    }
             }
         }
-    tetromino->y++;  
     }
+    tetromino->y++;  
 }
 
+void tetromino_place(Tetromino_active* tetromino_active, Grid* grid){
+    
+    for (int y = 0; y < tetromino_active->side; y++){
+        for (int x = 0; x < tetromino_active->side; x++){
+            
+            int index = (tetromino_active->y + y) * grid->x_cnt + (tetromino_active->x + x);
+            grid->cell[index] += tetromino_active->real_data[y * tetromino_active->side + x];
+        }
+    }
+    tetromino_active->status = false;
+}
 
 void alloc_type_tetromino(Tetromino_type* type){
     type->tetromino = (char*) malloc (sizeof(char) * 16);
+}
+
+void ghost_pos(Tetromino_active* tetromino, Grid* grid){
+    tetromino->ghost = 0;
+    for (int i = 0; i < GRID_HEIGHT; i++){
+        for (int x = 0; x < tetromino->side; x++){
+            char index= ((GRID_HEIGHT - tetromino->ghost + 1) * tetromino->side + x);
+            if (tetromino->ghost >= (GRID_HEIGHT - tetromino->side + 2) && tetromino->real_data[index] != 0){           //kontrola spodní pozice
+                
+                return;
+            }
+            else{
+                for (int y = 0; y < tetromino->side; y++){                                                              //kontrola překážek
+                        char t_val = tetromino->real_data[(y * tetromino->side + x)];
+                        char gr_val = grid->cell[(x + tetromino->x) + (y + tetromino->ghost + 1) * GRID_WIDTH];
+                        if (t_val != 0 && gr_val != 0){
+                            return;
+                        }
+                }
+            }
+        }
+    tetromino->ghost++;
+    } 
 }
 
 void load_tetrominos(Tetromino_type* type, char i){
