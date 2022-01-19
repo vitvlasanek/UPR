@@ -9,40 +9,46 @@ void create_grid(Grid *grid, int y_cnt_a, int x_cnt) {
 }
 
 
-void fill_cells(Grid* grid, SDL_Renderer* renderer, int cell_size, Colours* colours, Tetromino_active* tetromino_active){
+void fill_cells(Grid* grid, SDL_Renderer* renderer, int cell_size, Colours* colours, Tetromino_active* tetromino){
     
-    int cells_cnt = grid->y_cnt * grid->x_cnt;
+    int cells_cnt = grid->y_cnt * GRID_WIDTH;
     char* new_cells = (char*) malloc (sizeof(char)* cells_cnt);
     //char new_cells[cells_cnt];
     memcpy(new_cells, grid->cell, cells_cnt);
 
-    for (int y = 0; y < tetromino_active->side; y++){
-        for (int x = 0; x < tetromino_active->side; x++){
+    for (int y = 0; y < tetromino->side; y++){
+        for (int x = 0; x < tetromino->side; x++){
             
-            int index = (tetromino_active->y + y) * grid->x_cnt + (tetromino_active->x + x);
-            new_cells[index] += tetromino_active->real_data[y * tetromino_active->side + x];
+            int index = (tetromino->y + y) * GRID_WIDTH + (tetromino->x + x);
+            if (tetromino->y + y < GRID_HEIGHT + 2 && x + tetromino->x >= 0 && x + tetromino->x < GRID_WIDTH){
+                if (new_cells[index] == 0)
+                {
+                    new_cells[index] += tetromino->real_data[y * tetromino->side + x];
+                }
+            }
         }
     }
 
-    for (int y = 0; y < (grid->y_cnt + 2); y++){
-        for (int x = 0; x < grid->x_cnt; x++)
+    for (int y = 0; y < (GRID_HEIGHT + 2); y++){
+        for (int x = 0; x < GRID_WIDTH; x++)
         {
 
-            int i = x + grid->x_cnt * y;
-			if (new_cells[i + (2 * grid->x_cnt)] != 0)
+            int i = x + GRID_WIDTH * y;
+			//if (new_cells[i + (2 * GRID_WIDTH)] != 0)
+            if (new_cells[i] != 0)
 			{
-                char value = new_cells[i + (2 * grid->x_cnt)];
+                char value = new_cells[i];
 				SDL_Rect rect;
 
 				rect.x = (x * cell_size)+1;
-				rect.y = (y * cell_size)+1;
+				rect.y = ((y - 2) * cell_size)+1;
 				rect.h = cell_size-1;
 				rect.w = cell_size-1;
-				SDL_SetRenderDrawColor(renderer, colours->r[value]/2, colours->g[value]/2, colours->b[value]/2, 255);
+				SDL_SetRenderDrawColor(renderer, colours->r[value] / 2, colours->g[value] / 2, colours->b[value] / 2, 255);
 	            SDL_RenderFillRect(renderer, &rect);
 
                 rect.x = (x * cell_size)+3;
-				rect.y = (y * cell_size)+3;
+				rect.y = ((y - 2) * cell_size)+3;
 				rect.h = cell_size-5;
 				rect.w = cell_size-5;
 				SDL_SetRenderDrawColor(renderer, colours->r[value], colours->g[value], colours->b[value], 255);
@@ -94,13 +100,6 @@ void fill_right(SDL_Renderer* renderer){
         SDL_RenderFillRect(renderer, &right);
 }
 
-// void clear_line(Grid* grid, int line){
-//     for (int x = 0; x < GRID_WIDTH; x++){
-//         int index = (line + 1) * GRID_WIDTH + x;
-//         grid->cell[index] = 0;
-//     }
-// }
-
 int check_line(Grid* grid, int line){
     for (int x = 0; x < GRID_WIDTH; x++)
     {
@@ -134,27 +133,4 @@ int check_grid (Grid* grid){
         }
     }
     return cleared;
-}
-
-void show_score(SDL_Renderer* renderer, int score){
-    TTF_Init();
-    TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
-    SDL_Color White = {255, 255, 255};
-
-
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "your score is: ", White); 
-
-    // now you can convert it into a texture
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-
-    SDL_Rect Message_rect; //create a rect
-    Message_rect.x = 0;  //controls the rect's x coordinate 
-    Message_rect.y = 0; // controls the rect's y coordinte
-    Message_rect.w = 100; // controls the width of the rect
-    Message_rect.h = 100; // controls the height of the rect
-
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-
-    SDL_FreeSurface(surfaceMessage);
-    SDL_DestroyTexture(Message);
 }
