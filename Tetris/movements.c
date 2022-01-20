@@ -78,13 +78,19 @@ void move_left (Tetromino_active* tetromino, Grid* grid){
     tetromino->x--;  
 }
 
-void move_down (Tetromino_active* tetromino, Grid* grid){
+int move_down (Tetromino_active* tetromino, Grid* grid){
     for (int x = 0; x < tetromino->side; x++){
         unsigned char index= ((GRID_HEIGHT - tetromino->y + 1) * tetromino->side + x);
         if (tetromino->y >= (GRID_HEIGHT - tetromino->side + 2) && tetromino->real_data[index] != 0){           //kontrola spodní pozice
-            
+            if (tetromino->y > 0){
             tetromino_place(tetromino, grid);
-            return;
+            return 0;
+            }
+            else{
+            fprintf(stderr, "Game over!");
+                return 1;
+            }
+            
         }
         else{
             for (int y = 0; y < tetromino->side; y++){                              //kontrola překážek
@@ -93,14 +99,20 @@ void move_down (Tetromino_active* tetromino, Grid* grid){
                 if (index < ((GRID_HEIGHT + 2) * GRID_WIDTH - 1)){
                 unsigned char gr_val = grid->cell[index];
                     if (t_val != 0 && gr_val != 0){
-                        tetromino_place(tetromino, grid);
-                        return;
+                        if (tetromino->y > 0){
+                            tetromino_place(tetromino, grid);
+                            return 0;
+                            }
+                        else{
+                            return 1;
+                        }
                     }
                 }
             }
         }
     }
-    tetromino->y++;  
+    tetromino->y++;
+    return 0;  
 }
 
 void ghost_pos(Tetromino_active* tetromino, Grid* grid){

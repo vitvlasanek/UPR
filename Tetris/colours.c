@@ -1,6 +1,9 @@
 #include "mydefs.h"
 
-void set_colours(Colours* colours){     //barvy jednotlivých tvarů tetromin
+Colours* set_colours(){     //barvy jednotlivých tvarů tetromin
+    
+    Colours* colours = (Colours*) malloc (sizeof(Colours));
+
     colours->r[1] = 0;
     colours->g[1] = 255;
     colours->b[1] = 255;
@@ -28,4 +31,5 @@ void set_colours(Colours* colours){     //barvy jednotlivých tvarů tetromin
     colours->r[7] = 255;
     colours->g[7] = 0;
     colours->b[7] = 0;
+    return colours;
 }

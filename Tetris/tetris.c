@@ -5,8 +5,8 @@
 int main()
 {
     SDL_Event event;
-    Colours* colours = (Colours*) malloc (sizeof(Colours));
-    set_colours(colours);
+
+    Colours* colours = (set_colours());
 
     if (SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
@@ -29,11 +29,16 @@ int main()
         fprintf(stderr, "TTF_Init Error\n");
         return 1;
     }
+    TTF_Font* font = TTF_OpenFont("Roboto-Black.ttf", GAME_WIDTH/10);
+    if (font == NULL) {
+        fprintf(stderr, "Font not found\n");
+        return 1;
+    }
     
     Grid grid;                                                                      // struct s parametry herní mřížky
     Tetromino_active tetromino_active;                                              // parametry aktivního tetromina
     Tetromino_type type[7];                                                         // 7 typů tetromin
-    create_grid (&grid, GRID_HEIGHT, GRID_WIDTH);                                   // vytvoření mřížky
+    create_grid (&grid);                                   // vytvoření mřížky
     //tetromino_active.real_data = (unsigned char*) malloc (sizeof(unsigned char)* 16);
 
     for (int i = 0; i < 7; i++)
@@ -48,6 +53,7 @@ int main()
 
     int timer = 0;
     int counter = 0;
+    int next_type = 0;
     unsigned long long in_time = SDL_GetTicks();
     int score = 0;
     while (!quit)
@@ -60,8 +66,8 @@ int main()
         if (!tetromino_active.status){
             score += check_grid(&grid);
             srand (time(NULL));
-            unsigned char rand_type = rand() % 7;
-            copy_random(&tetromino_active, &type[rand_type]);
+            copy_random(&tetromino_active, &type[next_type]);
+            next_type = rand() % 7;
         }
         while (SDL_PollEvent(&event))
         {
@@ -71,7 +77,8 @@ int main()
             }
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_DOWN){
-                    move_down(&tetromino_active, &grid);
+                    //fast_drop(&tetromino_active);
+                    tetromino_active.y = tetromino_active.ghost;
                 }
                 else if (event.key.keysym.sym == SDLK_UP){
                     rotate_tetromino(&tetromino_active, &grid);
@@ -89,7 +96,9 @@ int main()
         }
         
         if(timer < 0){
-            move_down(&tetromino_active, &grid);
+            if(move_down(&tetromino_active, &grid)){
+                fprintf(stderr, "Game over!");
+            }
             timer = 1000;
         }
 
@@ -105,11 +114,13 @@ int main()
         }
         
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        //fill_right(renderer);
+        show_next(renderer, font);
+        draw_next(&type[next_type], renderer, colours);
         draw_ghost(&tetromino_active, renderer, colours);
         fill_cells(&grid, renderer, GAME_HEIGHT / GRID_HEIGHT, colours, &tetromino_active);                   //generováíní mřížky (mydefs.c)
-        fill_right(renderer);
-        show_score(renderer, score);
-        //game_over(renderer, score);
+        show_score(renderer, font, score);
+        //game_over(renderer, font, score);
         SDL_RenderPresent(renderer);  // Prezentace kreslítka
     }
     SDL_DestroyRenderer(renderer);

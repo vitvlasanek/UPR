@@ -1,11 +1,11 @@
 #include "mydefs.h"
 
-void create_grid(Grid *grid, int y_cnt_a, int x_cnt) {
-    int y_cnt_b = y_cnt_a + 2;
-    grid->cell = (unsigned char*) malloc (y_cnt_b * x_cnt * sizeof(unsigned char));
-    memset(grid->cell, 0, (y_cnt_b * x_cnt * sizeof(unsigned char)));
+void create_grid(Grid *grid) {
+    int y_cnt_b = GRID_HEIGHT + 2;
+    grid->cell = (unsigned char*) malloc (y_cnt_b * GRID_WIDTH * sizeof(char));
+    memset(grid->cell, 0, (y_cnt_b * GRID_WIDTH * sizeof(char)));
     grid->y_cnt = y_cnt_b;
-    grid->x_cnt = x_cnt;
+    grid->x_cnt = GRID_WIDTH;
 }
 
 void copy_down(Grid* grid, int line){
@@ -35,9 +35,9 @@ int check_line(Grid* grid, int line){
 int check_grid (Grid* grid){
     int cleared = 0;
     for (int y = GRID_HEIGHT ; y >= 0; y--){
-        if (check_line(grid, y) != 0){
-        cleared++;
-        y++;
+        if (check_line(grid, y)){
+            cleared++;
+            y++;
         }
     }
     return cleared;
