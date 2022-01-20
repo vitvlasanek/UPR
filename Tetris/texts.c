@@ -1,26 +1,51 @@
 #include "mydefs.h"
 
-void show_score(SDL_Renderer* renderer, int score){
-    TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
-    SDL_Color colour = {255, 255, 255};
+int show_score(SDL_Renderer* renderer, int score){
+    SDL_Color colour = {255, 255, 255, 255};
 
+    char score_text[128];
+    sprintf(score_text, "SCORE: %d", score);
 
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "your score is: ", colour); 
+    SDL_Rect message_rect;
+    message_rect.x = GAME_WIDTH * (1.1);
+    message_rect.y = GAME_WIDTH * (0.1);
+    message_rect.w = GAME_WIDTH * (0.8);
+    message_rect.h = GAME_WIDTH * (0.3);
 
-    // now you can convert it into a texture
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
-    SDL_Rect Message_rect; //create a rect
-    Message_rect.x = 100;  //controls the rect's x coordinate 
-    Message_rect.y = 100; // controls the rect's y coordinte
-    Message_rect.w = 200; // controls the width of the rect
-    Message_rect.h = 200; // controls the height of the rect
+    generate_text(renderer, &message_rect, score_text);
+    return 0;
+}
 
-    SDL_QueryTexture(Message, NULL, NULL, &Message_rect.w, &Message_rect.h);
+int game_over(SDL_Renderer* renderer, int score){
+    SDL_Color colour = {255, 255, 255, 255};
 
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-    SDL_RenderPresent(renderer);
-    SDL_DestroyTexture(Message);
-    SDL_FreeSurface(surfaceMessage);
-    TTF_CloseFont(font);
+    char score_text[128];
+    sprintf(score_text, "GAME OVER\nYOUR SCORE WAS: %d", score);
+
+    SDL_Rect message_rect;
+    message_rect.x = GAME_WIDTH * (0.5);
+    message_rect.y = GAME_WIDTH * (0.3);
+    message_rect.w = GAME_WIDTH * (1.5);
+    message_rect.h = GAME_WIDTH * (0.7);;
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
+    generate_text(renderer, &message_rect, score_text);
+    return 0;
+}
+
+int generate_text(SDL_Renderer* renderer, SDL_Rect* message_rect, char text[]){
+    TTF_Font* font = TTF_OpenFont("Roboto-Black.ttf", GAME_WIDTH/10);
+    if (font == NULL) {
+        fprintf(stderr, "Font not found\n");
+        return 1;
+    }
+    SDL_Color colour = {255, 255, 255, 255};
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, text, colour);
+    SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+    //SDL_QueryTexture(message, NULL, NULL, message_rect->w, message_rect->h);
+    SDL_RenderCopy(renderer, message, NULL, message_rect);
+    return 0;
 }

@@ -1,6 +1,6 @@
 #include "mydefs.h"
 
-void set_colours(Colours* colours){
+void set_colours(Colours* colours){     //barvy jednotlivých tvarů tetromin
     colours->r[1] = 0;
     colours->g[1] = 255;
     colours->b[1] = 255;
