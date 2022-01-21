@@ -1,11 +1,15 @@
 #include "mydefs.h"
 
-void create_grid(Grid *grid) {
+int create_grid(Grid *grid) {
     int y_cnt_b = GRID_HEIGHT + 2;
     grid->cell = (unsigned char*) malloc (y_cnt_b * GRID_WIDTH * sizeof(char));
+    if (!grid->cell){
+        return 1;
+    }
     memset(grid->cell, 0, (y_cnt_b * GRID_WIDTH * sizeof(char)));
     grid->y_cnt = y_cnt_b;
     grid->x_cnt = GRID_WIDTH;
+    return 0;
 }
 
 void copy_down(Grid* grid, int line){

@@ -58,7 +58,7 @@ void draw_next(Tetromino_type* tetromino, SDL_Renderer* renderer, Colours* colou
 
 
 // mydefs.c
-void create_grid(Grid *grid);
+int create_grid(Grid *grid);
 int check_grid (Grid* grid);
 int check_line(Grid* grid, int line);
 void copy_down(Grid* grid, int line);

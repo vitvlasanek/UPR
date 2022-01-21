@@ -7,6 +7,10 @@ int main()
     SDL_Event event;
 
     Colours* colours = (set_colours());
+    Grid grid;                                                                      // struct s parametry herní mřížky
+    if (create_grid (&grid)){                                                       // vytvoření mřížky
+        fprintf(stderr, "Could not alloc memory for grid");
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
@@ -35,10 +39,8 @@ int main()
         return 1;
     }
     
-    Grid grid;                                                                      // struct s parametry herní mřížky
     Tetromino_active tetromino_active;                                              // parametry aktivního tetromina
     Tetromino_type type[7];                                                         // 7 typů tetromin
-    create_grid (&grid);                                   // vytvoření mřížky
     //tetromino_active.real_data = (unsigned char*) malloc (sizeof(unsigned char)* 16);
 
     for (int i = 0; i < 7; i++)
@@ -114,7 +116,7 @@ int main()
         }
         
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        //fill_right(renderer);
+        fill_right(renderer);
         show_next(renderer, font);
         draw_next(&type[next_type], renderer, colours);
         draw_ghost(&tetromino_active, renderer, colours);
