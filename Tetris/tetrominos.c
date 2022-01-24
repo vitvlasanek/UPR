@@ -2,10 +2,9 @@
 
 void copy_random(Tetromino_active* tetromino, Tetromino_type* type){
     tetromino->side = type->side;
-    //tetromino->real_data = (unsigned char*) malloc (sizeof(unsigned char) * tetromino->side);
-    tetromino->real_data = type->tetromino;
+    memcpy(tetromino->real_data,type->tetromino,type->side * type->side);
     tetromino->x = rand() % (GRID_WIDTH - type->side);
-    tetromino->ghost = tetromino->x;
+    tetromino->ghost = 0;
     tetromino->y = 0;
     tetromino->status = true;    
 }
@@ -23,11 +22,13 @@ void tetromino_place(Tetromino_active* tetromino, Grid* grid){
     }
 }
 
-void alloc_type_tetromino(Tetromino_type* type){
-    type->tetromino = (unsigned char*) malloc (sizeof(unsigned char) * 16);
+Tetromino_type * alloc_type_tetromino(){
+    Tetromino_type *type= (Tetromino_type*) malloc (sizeof(Tetromino_type) * 7);
+    return(type);
 }
 
-void load_tetrominos(Tetromino_type* type, unsigned char i){
+void load_tetrominos(Tetromino_type * type, unsigned char i){
+    //type->tetromino = (unsigned char*) malloc(sizeof(char)*16);
     static unsigned char t1[16] = {
         0,0,0,0,
         1,1,1,1,
@@ -92,4 +93,21 @@ void load_tetrominos(Tetromino_type* type, unsigned char i){
         type->tetromino = t0;
         type->side = 0;
     }   
+}
+
+Tetromino_active * alloc_tetromino_active(){
+    Tetromino_active * tetromino  = (Tetromino_active*)malloc(sizeof(Tetromino_active));
+    if(!tetromino){
+        return 0;
+    }
+    tetromino->real_data = (unsigned char*)malloc(sizeof(char)*16);
+    if(!tetromino->real_data){
+        return 0;
+    }
+    tetromino->ghost = -1;
+    tetromino->status = false;
+    tetromino->side = 0;
+    tetromino->x = 0;
+    tetromino->y = 0;
+    return tetromino;
 }

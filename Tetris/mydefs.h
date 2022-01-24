@@ -37,7 +37,7 @@ typedef struct T_active {
 
 //struktura pro vyorová tetromina
 typedef struct T_type {
-    unsigned char* tetromino;                   //pole s tvarem tetromina
+    unsigned char * tetromino;                   //pole s tvarem tetromina
     unsigned char side;                         //délka nejdelší strany tetromina
 }Tetromino_type;
 
@@ -61,19 +61,28 @@ void draw_next(Tetromino_type* tetromino, SDL_Renderer* renderer, Colours* colou
 int create_grid(Grid *grid);
 int check_grid (Grid* grid);
 int check_line(Grid* grid, int line);
-void copy_down(Grid* grid, int line);
+int copy_down(Grid* grid, int line);
+int free_all(Grid * grid, Tetromino_active ** Tetromino_active, Colours* colours, Tetromino_type * type);
 
 // texts.c
 int generate_text(SDL_Renderer* renderer, SDL_Rect* message_rect, TTF_Font* font, char text[]);
 int show_score(SDL_Renderer* renderer, TTF_Font* font, int score);
 int game_over(SDL_Renderer* renderer, TTF_Font* font, int score);
 int show_next(SDL_Renderer* renderer, TTF_Font* font);
+int show_lines(SDL_Renderer* renderer, TTF_Font* font, int lines);
+int show_controlls(SDL_Renderer* renderer, TTF_Font* font);
+int show_up(SDL_Renderer* renderer, TTF_Font* font);
+int show_down(SDL_Renderer* renderer, TTF_Font* font);
+int show_move(SDL_Renderer* renderer, TTF_Font* font);
+int show_drop(SDL_Renderer* renderer, TTF_Font* font);
+
 
 // tetrominos.c
 void copy_random(Tetromino_active* tetromino, Tetromino_type* type);
 void tetromino_place(Tetromino_active* tetromino, Grid* grid);
-void alloc_type_tetromino(Tetromino_type* type);
+Tetromino_type * alloc_type_tetromino();
 void load_tetrominos(Tetromino_type* type, unsigned char i);
+Tetromino_active * alloc_tetromino_active();
 
 // movements.c
 void ghost_pos(Tetromino_active* tetromino, Grid* grid);
