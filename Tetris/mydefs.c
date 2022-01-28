@@ -51,20 +51,38 @@ int check_grid (Grid* grid){
     return cleared;
 }
 
-int free_all(Grid * grid, Tetromino_active ** tetromino, Colours * colours, Tetromino_type * type){
-    free(grid->cell);
-    grid->cell = NULL;
-    free(grid);
-    grid = NULL;
+int free_all(Grid ** grid, Tetromino_active ** tetromino, Colours ** colours, Tetromino_type * type){
+    free((*grid)->cell);
+    (*grid)->cell = NULL;
+    free(*grid);
+    (*grid) = NULL;
     free((*tetromino)->real_data);
     (*tetromino)->real_data = NULL;
     free(*tetromino);
     (*tetromino) = NULL;
-    free(colours);
-    colours = NULL;
+    free(*colours);
+    (*colours) = NULL;
     //free(type->tetromino);
     free(type);
     type = NULL;
     
     return 0;
+}
+
+int score_count(int cleared){
+    if (cleared == 1){
+        return 800;
+    }
+    else if (cleared == 2){
+        return 1200;
+    }
+    else if (cleared == 3){
+        return 1800;
+    }
+    else if (cleared == 4){
+        return 2000;
+    }
+    else{
+        return 0;
+    }
 }

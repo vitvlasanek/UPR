@@ -123,3 +123,55 @@ void fill_right(SDL_Renderer* renderer){
         right.h = GAME_HEIGHT;
         SDL_RenderFillRect(renderer, &right);
 }
+
+Colours* set_colours(){     //barvy jednotlivých tvarů tetromin
+    
+    Colours* colours = (Colours*) malloc (sizeof(Colours));
+
+    colours->r[1] = 0;
+    colours->g[1] = 255;
+    colours->b[1] = 255;
+
+    colours->r[2] = 0;
+    colours->g[2] = 0;
+    colours->b[2] = 255;
+
+    colours->r[3] = 255;
+    colours->g[3] = 128;
+    colours->b[3] = 0;
+
+    colours->r[4] = 255;
+    colours->g[4] = 255;
+    colours->b[4] = 0;
+
+    colours->r[5] = 0;
+    colours->g[5] = 255;
+    colours->b[5] = 0;
+
+    colours->r[6] = 128;
+    colours->g[6] = 0;
+    colours->b[6] = 255;
+
+    colours->r[7] = 255;
+    colours->g[7] = 0;
+    colours->b[7] = 0;
+    return colours;
+}
+
+int draw_keys(SDL_Renderer* renderer, SDL_Surface * image){
+
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
+    
+    SDL_Rect rect;
+    rect.x = GAME_WIDTH * (1.1);
+    rect.y = GAME_WIDTH * (0.8);
+    rect.w = GAME_WIDTH * (0.8);
+    rect.h = GAME_WIDTH * (0.65);
+
+
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    SDL_SetRenderTarget(renderer, NULL);
+    //SDL_RenderClear(renderer);
+    SDL_DestroyTexture(texture);
+    return 0;
+}

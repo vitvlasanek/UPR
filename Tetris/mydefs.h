@@ -55,6 +55,8 @@ int fill_cells(Grid* grid, SDL_Renderer* renderer, int size, Colours* colours, T
 void fill_right(SDL_Renderer* renderer);
 void draw_ghost(Tetromino_active* tetromino, SDL_Renderer* renderer, Colours* colours);
 void draw_next(Tetromino_type* tetromino, SDL_Renderer* renderer, Colours* colours);
+Colours* set_colours();
+int draw_keys(SDL_Renderer* renderer, SDL_Surface * image);
 
 
 // mydefs.c
@@ -62,19 +64,18 @@ int create_grid(Grid *grid);
 int check_grid (Grid* grid);
 int check_line(Grid* grid, int line);
 int copy_down(Grid* grid, int line);
-int free_all(Grid * grid, Tetromino_active ** Tetromino_active, Colours* colours, Tetromino_type * type);
+int free_all(Grid ** grid, Tetromino_active ** Tetromino_active, Colours ** colours, Tetromino_type * type);
+int score_count(int cleared);
 
 // texts.c
 int generate_text(SDL_Renderer* renderer, SDL_Rect* message_rect, TTF_Font* font, char text[]);
 int show_score(SDL_Renderer* renderer, TTF_Font* font, int score);
-int game_over(SDL_Renderer* renderer, TTF_Font* font, int score);
+int game_over(SDL_Renderer* renderer, TTF_Font* font);
+int game_over_score(SDL_Renderer* renderer, TTF_Font* font, int score);
 int show_next(SDL_Renderer* renderer, TTF_Font* font);
 int show_lines(SDL_Renderer* renderer, TTF_Font* font, int lines);
-int show_controlls(SDL_Renderer* renderer, TTF_Font* font);
-int show_up(SDL_Renderer* renderer, TTF_Font* font);
-int show_down(SDL_Renderer* renderer, TTF_Font* font);
-int show_move(SDL_Renderer* renderer, TTF_Font* font);
-int show_drop(SDL_Renderer* renderer, TTF_Font* font);
+int show_controls(SDL_Renderer* renderer, TTF_Font* font);
+int game_over_text(SDL_Renderer* renderer, TTF_Font* font);
 
 
 // tetrominos.c
@@ -90,8 +91,5 @@ void move_right (Tetromino_active* tetromino, Grid* grid);
 void move_left (Tetromino_active* tetromino, Grid* grid);
 int move_down (Tetromino_active* tetromino, Grid* grid);
 void rotate_tetromino (Tetromino_active* tetromino, Grid* grid);
-
-// colours.c
-Colours* set_colours();
 
 #endif

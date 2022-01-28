@@ -1,5 +1,5 @@
-NAME=tetris
-OBJFILES=$(NAME).c mydefs.c movements.c graphics.c colours.c tetrominos.c texts.c
+NAME=main
+OBJFILES=$(NAME).c mydefs.c movements.c graphics.c tetrominos.c texts.c
 CC=gcc
 CFLAGS= -g -fsanitize=address -Wall -Wextra -Wno-unused-variable
 
