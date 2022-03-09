@@ -12,5 +12,3 @@ ovládání:
     šipka vlevo - pohyb tetromina vlelo
     mezerník - okamžitý pád tetromina
     escape - zavření hry
-
-vztvořil: Vít Vlašánek - VŠB Ostrava
